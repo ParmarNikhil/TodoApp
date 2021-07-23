@@ -26,7 +26,9 @@ class App extends Component {
   }
 
   componentDidMount(){
-    this.setState({tododata:JSON.parse(localStorage.getItem("data"))})
+    if(localStorage.getItem("data")!==null){
+      this.setState({tododata:JSON.parse(localStorage.getItem("data"))})
+    }
   }
 
   removeTodo = (todo) => {
@@ -38,7 +40,7 @@ class App extends Component {
 
   clearAll = () => {
     this.setState({ tododata: [] });
-    localStorage.setItem("data", JSON.stringify(this.state.tododata));
+    localStorage.clear("data");
   }  
   
   addToComplete = (todo) => {
@@ -63,24 +65,24 @@ class App extends Component {
     // this.setState({tododata:cpdata})
   }
 
-  
-  
-
   render() {
-    let tododata = [];
-    if (this.state.whichtoshow === "completed") {
-      tododata = this.state.tododata.filter((
-        todo => todo.iscomplete
-      ))
+    let tododata = [{}];
+    if(this.state.tododata!==null){
+      if (this.state.whichtoshow === "completed") {
+        tododata = this.state.tododata.filter((
+          todo => todo.iscomplete
+        ))
+      }
+      else if(this.state.whichtoshow==="active") {
+        tododata = this.state.tododata.filter((          
+          todo => !todo.iscomplete
+        ))
+      }
+      else{
+        tododata = this.state.tododata;
+      }
     }
-    else if(this.state.whichtoshow==="active") {
-      tododata = this.state.tododata.filter((          
-        todo => !todo.iscomplete
-      ))
-    }
-    else{
-      tododata = this.state.tododata;
-    }
+    
     return (
       <body>
       <div className="maincontainer">
