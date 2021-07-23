@@ -12,7 +12,6 @@ class App extends Component {
   }
 
   handlechange = (event) => {
-    event.preventDefault();
     if(event.target.value!==""){
     this.setState({ temp: event.target.value });
     }
@@ -20,15 +19,20 @@ class App extends Component {
 
   addToList = () => {
     var today = new Date();
-    this.setState({ tododata: [{ "id": shortid.generate(), "text": this.state.temp, "date": today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds(), "iscomplete": false }, ...this.state.tododata] })
-    localStorage.setItem("data", JSON.stringify(this.state.tododata));
-    this.setState({ temp: "" });
+    if(this.state.temp!==""){
+      this.setState({ tododata: [{ "id": shortid.generate(), "text": this.state.temp, "date": today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds(), "iscomplete": false }, ...this.state.tododata] })
+      localStorage.setItem("data", JSON.stringify(this.state.tododata));
+      this.setState({ temp: "" });
+      document.getElementById("userinput").value="";
+    }
+    
   }
 
   componentDidMount(){
-    if(localStorage.getItem("data")!==null){
-      this.setState({tododata:JSON.parse(localStorage.getItem("data"))})
-    }
+    localStorage.clear("data")
+    // if(localStorage.getItem("data")!==null){
+    //   this.setState({tododata:JSON.parse(localStorage.getItem("data"))})
+    // }
   }
 
   removeTodo = (todo) => {
@@ -89,7 +93,7 @@ class App extends Component {
 
         <header>Todo List</header>
         <div className="inputbox">
-        <input type="text" onChange={this.handlechange} value={this.state.temp} placeholder="add something" />
+        <input type="text" id="userinput" onChange={this.handlechange} placeholder="add something" />
         </div>
         <div className="buttonlist">
         <button onClick={this.addToList}>add</button>&nbsp;
@@ -98,22 +102,29 @@ class App extends Component {
         <button onClick={() => this.setState({ whichtoshow: "active" })}>active todos</button>
         </div>
         <br></br>
+       
         <div className="todolist">
           
           {tododata.map((todo) =>
-            <div className="todoitems" key={todo.id}>Task: {todo.text} 
+            
+            <div className="todoitems" key={todo.id}>
+              <div>Task: {todo.text}
             <br></br>
-            Time:  &nbsp; {todo.date} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <button onClick={()=>this.removeTodo(todo)}>✗</button>
-          &nbsp;
+            Time:  &nbsp; {todo.date}</div>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <button onClick={()=>this.removeTodo(todo)}>✗</button>
+            &nbsp;
             {!todo.iscomplete ?
             <button onClick={() => this.addToComplete(todo)} id="completebtn" className="cmpbtn" >✓</button>
             :null
             }  
               
             </div>
+            
           )}
-        </div><br></br>
         </div>
+       
+        <br></br>
+        </div>
+        
         </body>
     );
   }
