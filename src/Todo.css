@@ -1,0 +1,77 @@
+input[type=text], select {
+    width: 280px;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+body{
+    background-color: #262833;
+}
+
+.maincontainer{
+    align-items: center;
+    color: white;
+    justify-content: center;
+    display:inline;
+    background-color: #262833;
+    
+}
+
+.todolist{
+    height: auto;
+}
+
+.todoitems{
+    margin-left: 140px;
+    background-color:#262833;
+    width: 500px;
+    border: white;
+    border-style:solid;
+    height: 50px;
+    color: white;
+    font-weight: bold;
+    justify-content: center;
+    align-items: center;
+    margin-left: 500px;
+    
+    padding: 10px 15px;
+   
+}
+
+button{
+    background:transparent;
+    height: 30px;
+    width: auto;
+    background-color: #262833;
+    align-items: center;
+    color: white;
+    font-weight: normal;
+}
+
+header{
+  display: flex;
+  margin-top: 50px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+}
+
+.inputbox{
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.buttonlist{
+    justify-content: center;
+    margin-top: 10px;
+    align-items: center;
+    margin-left: 620px;
+
+}
+
+
+
