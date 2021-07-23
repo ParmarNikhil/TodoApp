@@ -71,7 +71,7 @@ class App extends Component {
 
   render() {
     let tododata = [{}];
-    if(this.state.tododata!==null){
+    
       if (this.state.whichtoshow === "completed") {
         tododata = this.state.tododata.filter((
           todo => todo.iscomplete
@@ -85,8 +85,7 @@ class App extends Component {
       else{
         tododata = this.state.tododata;
       }
-    }
-    
+   
     return (
       <body>
       <div className="maincontainer">
