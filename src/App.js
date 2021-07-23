@@ -13,26 +13,34 @@ class App extends Component {
 
   handlechange = (event) => {
     event.preventDefault();
+    if(event.target.value!==""){
     this.setState({ temp: event.target.value });
+    }
   }
 
   addToList = () => {
     var today = new Date();
     this.setState({ tododata: [{ "id": shortid.generate(), "text": this.state.temp, "date": today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds(), "iscomplete": false }, ...this.state.tododata] })
-    console.log(this.state.tododata);
-    
+    localStorage.setItem("data", JSON.stringify(this.state.tododata));
     this.setState({ temp: "" });
+  }
+
+  componentDidMount(){
+    this.setState({tododata:JSON.parse(localStorage.getItem("data"))})
   }
 
   removeTodo = (todo) => {
     const cpdata = this.state.tododata;
     cpdata.splice(cpdata.indexOf(todo),1);
     this.setState({tododata:cpdata});
+    localStorage.setItem("data", JSON.stringify(this.state.tododata));
   }
 
   clearAll = () => {
     this.setState({ tododata: [] });
-  }
+    localStorage.setItem("data", JSON.stringify(this.state.tododata));
+  }  
+  
   addToComplete = (todo) => {
     const today = new Date();
     let data = this.state.tododata.map((t)=>{
@@ -42,16 +50,20 @@ class App extends Component {
       else{
         return t;
       }
+     
       
     })
     
     console.log(data);
+    localStorage.setItem("data",JSON.stringify(data));
     this.setState({tododata:data});
+    
     // this.setState({tododata:[{"iscomplete":true,...todo},...this.state.tododata]})
     // const cpdata = this.state.tododata
     // this.setState({tododata:cpdata})
   }
 
+  
   
 
   render() {
@@ -85,7 +97,7 @@ class App extends Component {
         </div>
         <br></br>
         <div className="todolist">
-
+          
           {tododata.map((todo) =>
             <div className="todoitems" key={todo.id}>Task: {todo.text} 
             <br></br>
