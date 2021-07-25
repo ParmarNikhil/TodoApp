@@ -1,38 +1,46 @@
 import { Component } from 'react';
 import './App.css';
-import './Todo.css';
+// import '/TodoDarkMode.css';
+import './TodoDarkMode.css';
 import shortid from 'shortid';
 
 class App extends Component {
   state = {
     temp: "",
     tododata: [],
-    completed: [],
     whichtoshow: ""
   }
-
+  
   handlechange = (event) => {
     if(event.target.value!==""){
-    this.setState({ temp: event.target.value });
+      this.setState({ temp: event.target.value });
     }
+    
   }
 
   addToList = () => {
     var today = new Date();
     if(this.state.temp!==""){
-      this.setState({ tododata: [{ "id": shortid.generate(), "text": this.state.temp, "date": today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds(), "iscomplete": false }, ...this.state.tododata] })
-      localStorage.setItem("data", JSON.stringify(this.state.tododata));
-      this.setState({ temp: "" });
-      document.getElementById("userinput").value="";
+      this.setState({ 
+        tododata: [{ "id": shortid.generate(), 
+        "text": this.state.temp, 
+        "date": today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear() + '-' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds(), 
+        "iscomplete": false },...this.state.tododata],temp:""
+      },() => {
+        localStorage.setItem("data",JSON.stringify(this.state.tododata));
+        
+      }
+      );  
     }
+    
+    document.getElementById("userinput").value="";
     
   }
 
   componentDidMount(){
-    localStorage.clear("data")
-    // if(localStorage.getItem("data")!==null){
-    //   this.setState({tododata:JSON.parse(localStorage.getItem("data"))})
-    // }
+    if(localStorage.getItem("data")!==null){
+      this.setState({tododata:JSON.parse(localStorage.getItem("data"))})
+    }
   }
 
   removeTodo = (todo) => {
@@ -51,22 +59,18 @@ class App extends Component {
     const today = new Date();
     let data = this.state.tododata.map((t)=>{
       if(t.id===todo.id){
-        return {...todo,"id":todo.id,"iscomplete":true,"date": today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds()}
+        return {...todo,"id":todo.id,"iscomplete":true, "date":todo.date ,"completeddate": today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear() + '-' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds()}
       }
       else{
         return t;
       }
-     
-      
+
     })
     
     console.log(data);
     localStorage.setItem("data",JSON.stringify(data));
     this.setState({tododata:data});
     
-    // this.setState({tododata:[{"iscomplete":true,...todo},...this.state.tododata]})
-    // const cpdata = this.state.tododata
-    // this.setState({tododata:cpdata})
   }
 
   render() {
@@ -102,20 +106,33 @@ class App extends Component {
         </div>
         <br></br>
        
-        <div className="todolist">
-          
+        <div className="todolist"> 
           {tododata.map((todo) =>
             
             <div className="todoitems" key={todo.id}>
-              <div>Task: {todo.text}
+            Task: {todo.text}
             <br></br>
-            Time:  &nbsp; {todo.date}</div>  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <button onClick={()=>this.removeTodo(todo)}>✗</button>
-            &nbsp;
+            
+            Added Time:&nbsp;{todo.date}
+            <br></br>
+            
+            {todo.iscomplete ?
+            <div>
+            Completed Time:&nbsp;{todo.completeddate}</div>:null  
+            }
+
+            <div style={{display:'flex', flexDirection:"column", margin:'auto'}}></div>
+            
+            <div className="todobtndiv">
+            <button style={{width:30, height:30, fontSize:15}} onClick={()=>this.removeTodo(todo)}>✗</button>
+            
             {!todo.iscomplete ?
-            <button onClick={() => this.addToComplete(todo)} id="completebtn" className="cmpbtn" >✓</button>
+            <button onClick={() => this.addToComplete(todo)} id="completebtn" style={{width:30, height:30, fontSize:15}} className="cmpbtn" >✓</button>
             :null
             }  
-              
+            </div>
+            
+            
             </div>
             
           )}
@@ -123,7 +140,6 @@ class App extends Component {
        
         <br></br>
         </div>
-        
         </body>
     );
   }
