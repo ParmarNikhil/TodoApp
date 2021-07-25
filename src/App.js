@@ -4,6 +4,7 @@ import './App.css';
 import './TodoDarkMode.css';
 import shortid from 'shortid';
 
+
 class App extends Component {
   state = {
     temp: "",
@@ -17,14 +18,26 @@ class App extends Component {
     }
     
   }
-
+  formatTime = (date) => {
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 ;
+    hours = hours ? hours : 12;
+    minutes = minutes.toString().padStart(2,'0');
+    let strTime = hours + ':' + minutes + ' ' + ampm;
+    return strTime;
+  } 
+  
   addToList = () => {
-    var today = new Date();
+    const date = new Date();
+    var today = this.formatTime(date);
+
     if(this.state.temp!==""){
       this.setState({ 
         tododata: [{ "id": shortid.generate(), 
         "text": this.state.temp, 
-        "date": today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear() + '-' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds(), 
+        "date": date.getDate() + ' - ' + date.toLocaleString('default',{month:'long'}) + ' - ' + today, 
         "iscomplete": false },...this.state.tododata],temp:""
       },() => {
         localStorage.setItem("data",JSON.stringify(this.state.tododata));
@@ -56,10 +69,12 @@ class App extends Component {
   }  
   
   addToComplete = (todo) => {
-    const today = new Date();
+    const date = new Date();
+    var today = this.formatTime(date);
+
     let data = this.state.tododata.map((t)=>{
       if(t.id===todo.id){
-        return {...todo,"id":todo.id,"iscomplete":true, "date":todo.date ,"completeddate": today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear() + '-' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds()}
+        return {...todo,"id":todo.id,"iscomplete":true, "date":todo.date ,"completeddate": date.getDate() + ' - ' + date.toLocaleString('default',{month:'long'}) + ' - ' + today}
       }
       else{
         return t;
@@ -93,19 +108,21 @@ class App extends Component {
     return (
       <body>
       <div className="maincontainer">
-
+        
         <header>Todo List</header>
         <div className="inputbox">
         <input type="text" id="userinput" onChange={this.handlechange} placeholder="add something" />
-        </div>
+        
+        </div> 
         <div className="buttonlist">
         <button onClick={this.addToList}>add</button>&nbsp;
         <button onClick={this.clearAll}>clear all</button>&nbsp;
         <button onClick={() => this.setState({ whichtoshow: "completed" })}>completed</button>&nbsp;
-        <button onClick={() => this.setState({ whichtoshow: "active" })}>active todos</button>
+        <button onClick={() => this.setState({ whichtoshow: "active" })}>active</button>
         </div>
         <br></br>
-       
+        <center> Tasks left : {this.state.tododata.filter((todo)=>!todo.iscomplete).length} </center>
+        <br></br>
         <div className="todolist"> 
           {tododata.map((todo) =>
             
@@ -125,8 +142,9 @@ class App extends Component {
             
             <div className="todobtndiv">
             <button style={{width:30, height:30, fontSize:15}} onClick={()=>this.removeTodo(todo)}>✗</button>
-            
+            &nbsp;&nbsp;
             {!todo.iscomplete ?
+            
             <button onClick={() => this.addToComplete(todo)} id="completebtn" style={{width:30, height:30, fontSize:15}} className="cmpbtn" >✓</button>
             :null
             }  
@@ -134,8 +152,9 @@ class App extends Component {
             
             
             </div>
-            
           )}
+          <br></br>
+             
         </div>
        
         <br></br>
