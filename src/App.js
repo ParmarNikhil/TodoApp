@@ -106,7 +106,7 @@ class App extends Component {
       }
    
     return (
-      <body>
+     
       <div className="maincontainer">
         
         <header>Todo List</header>
@@ -123,19 +123,19 @@ class App extends Component {
         <br></br>
         <center> Tasks left : {this.state.tododata.filter((todo)=>!todo.iscomplete).length} </center>
         <br></br>
-        <div className="todolist"> 
+         
           {tododata.map((todo) =>
             
             <div className="todoitems" key={todo.id}>
-            Task: {todo.text}
+            Task&nbsp;:&nbsp;{todo.text}
             <br></br>
             
-            Added Time:&nbsp;{todo.date}
+            Added Time&nbsp;:&nbsp;{todo.date}
             <br></br>
             
             {todo.iscomplete ?
             <div>
-            Completed Time:&nbsp;{todo.completeddate}</div>:null  
+            Completed Time&nbsp;:&nbsp;{todo.completeddate}</div>:null  
             }
 
             <div style={{display:'flex', flexDirection:"column", margin:'auto'}}></div>
@@ -157,9 +157,8 @@ class App extends Component {
              
         </div>
        
-        <br></br>
-        </div>
-        </body>
+       
+
     );
   }
 }

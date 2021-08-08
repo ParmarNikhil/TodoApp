@@ -6,8 +6,23 @@ input[type=text], select {
     
 }
 
+@media (max-width: 480px) {
+ 
+    body{
+        margin:auto;
+    }    
+    
+    .todoitems{
+        width: 100%;
+
+    }
+    
+  
+}
+
 body{
     background-color: #121212;
+    padding: 0px 50px 0px 50px;
 }
 
 .maincontainer{
